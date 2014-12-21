@@ -1,0 +1,60 @@
+---
+
+- meta: flush_handlers
+
+- name: Copy display libraries
+  copy:
+    src={{ item }}
+    dest=/var/tmp/
+  with_items:
+    - 'libraspberrypi-bin-adafruit.deb'
+    -  'libraspberrypi-doc-adafruit.deb'
+    -  'raspberrypi-bootloader-adafruit-112613.deb'
+    -  'libraspberrypi-dev-adafruit.deb'
+    -  'libraspberrypi0-adafruit.deb'
+  notify: Install display libraries
+
+- meta: flush_handlers
+
+- name: Add spi-bcm2708 module to the kernel
+  lineinfile:
+    dest=/etc/modules
+    line='spi-bcm2708'
+
+- name: Add fbtft_device module to the kernel
+  lineinfile:
+    dest=/etc/modules
+    line='fbtft_device'
+
+- name: Add command to cron to clear /dev/tty1 on startup
+  cron:
+    name="Clear tty1 on startup"
+    special_time=reboot
+    job='echo "\033[2J\033[1;1H" > /dev/tty1'
+
+- name: Clear the carbon pid file and restart carbon
+  cron:
+    name="Clear pid and restart carbon"
+    special_time=reboot
+    job='rm -f /opt/graphite/storage/carbon-cache-a.pid && service carbon restart'
+
+- name: Install the display modules conf file
+  copy:
+    src=adafruit.conf
+    dest=/etc/modprobe.d/adafruit.conf
+
+- name: Install kernel params
+  copy:
+    src=kbd.config
+    dest=/etc/kbd/config
+    owner=root
+    group=root
+    mode=0544
+
+- name: Update the cmdline.txt
+  copy:
+    src=cmdline.txt
+    dest=/boot/cmdline.txt
+  notify:
+    - Restart system
+

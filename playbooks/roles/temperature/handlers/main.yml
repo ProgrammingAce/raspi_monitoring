@@ -1,0 +1,22 @@
+---
+
+- name: Restart system
+  action: command /sbin/reboot
+  async: 0
+  poll: 0
+  ignore_errors: true
+  notify: Wait for restart
+
+- name: Wait for restart
+  local_action:
+    wait_for host={{ inventory_hostname }}
+    delay=30
+    port=22
+    state=started
+  sudo: false
+  notify: Restart apache
+
+- name: Restart apache
+  service:
+    name=apache2
+    state=restarted

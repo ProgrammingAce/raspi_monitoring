@@ -1,0 +1,99 @@
+---
+
+- name: Install python dependencies
+  apt: name={{ item }}
+  with_items:
+    - python-pip
+    - python-cairo
+    - python-django
+    - python-django-tagging
+    - python-twisted
+
+- name: Install apache and dependencies
+  apt: name={{ item }}
+  with_items:
+    - apache2
+    - libapache2-mod-wsgi
+    - libapache2-mod-python
+
+- name: Install graphite pip packages
+  pip: name={{ item }}
+  with_items:
+    - whisper
+    - carbon
+    - graphite-web
+
+- name: Move example configs into use
+  shell: cp {{ item.src }} {{ item.dest }}
+    creates=/opt/graphite/conf/graphite.wsgi
+  with_items:
+    - { src: '/opt/graphite/conf/carbon.conf.example', dest: '/opt/graphite/conf/carbon.conf' }
+    - { src: '/opt/graphite/conf/aggregation-rules.conf.example', dest: '/opt/graphite/conf/aggregation-rules.conf' }
+    - { src: '/opt/graphite/conf/storage-aggregation.conf.example', dest: '/opt/graphite/conf/storage-aggregation.conf' }
+    - { src: '/opt/graphite/conf/relay-rules.conf.example', dest: '/opt/graphite/conf/relay-rules.conf' }
+    - { src: '/opt/graphite/conf/storage-schemas.conf.example', dest: '/opt/graphite/conf/storage-schemas.conf' }
+    - { src: '/opt/graphite/conf/dashboard.conf.example', dest: '/opt/graphite/conf/dashboard.conf' }
+    - { src: '/opt/graphite/conf/graphTemplates.conf.example', dest: '/opt/graphite/conf/graphTemplates.conf' }
+    - { src: '/opt/graphite/conf/graphite.wsgi.example', dest: '/opt/graphite/conf/graphite.wsgi' }
+
+- name: Overwrite storage-schemas.conf
+  copy:
+    src=storage-schemas.conf
+    dest=/opt/graphite/conf/storage-schemas.conf
+
+- name: Install the django syncdb script
+  copy:
+    src=synchdb.py
+    dest=/opt/graphite/webapp/graphite/synchdb.py
+
+- name: Configure timezone
+  copy:
+    src=local_settings.py
+    dest=/opt/graphite/webapp/graphite/local_settings.py
+  notify: Synch DB
+
+- meta: flush_handlers
+
+- name: Install graphites apache config
+  copy:
+    src=graphite.conf
+    dest=/etc/apache2/sites-available/graphite
+  notify: Activate graphite apache config
+
+- name: Remove default apache config
+  file:
+    path=/etc/apache2/sites-enabled/000-default
+    state=absent
+  notify: Restart apache
+
+- name: Install carbon init.d script
+  copy:
+    src=carbon.initd
+    dest=/etc/init.d/carbon
+    mode=0755
+
+- name: Set graphite storage permissions
+  file:
+    owner=www-data
+    group=www-data
+    recurse=yes
+    path=/opt/graphite/storage/
+  notify: Restart apache
+
+- name: Start carbon service
+  service:
+    name=carbon
+    enabled=yes
+    state=started
+
+- name: Set carbon service to run at reboot
+  shell: update-rc.d carbon defaults
+  notify: Restart system
+
+- name: Set permissions for graphite DB
+  file:
+    path=/opt/graphite/storage/graphite.db
+    owner=www-data
+    group=www-data
+
+- meta: flush_handlers

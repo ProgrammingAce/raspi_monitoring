@@ -1,0 +1,4 @@
+---
+
+- name: Install display libraries
+  shell: dpkg -i -B /var/tmp/*.deb

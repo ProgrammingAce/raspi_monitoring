@@ -1,0 +1,36 @@
+---
+
+
+- name: Synch DB
+  shell: python /opt/graphite/webapp/graphite/manage.py syncdb --noinput
+  notify: Set permissions for graphite DB
+
+- name: Set permissions for graphite DB
+  file:
+    path=/opt/graphite/storage/graphite.db
+    owner=www-data
+    group=www-data
+
+- name: Activate graphite apache config
+  shell: /usr/sbin/a2ensite graphite
+  notify: Restart apache
+
+- name: Restart apache
+  service:
+    name=apache2
+    state=restarted
+
+- name: Restart system
+  action: command /sbin/reboot
+  async: 0
+  poll: 0
+  ignore_errors: true
+  notify: Wait for restart
+
+- name: Wait for restart
+  local_action:
+    wait_for host={{ inventory_hostname }}
+    delay=30
+    port=22
+    state=started
+  sudo: false

@@ -1,0 +1,31 @@
+---
+
+- name: Install Adafruit DHT driver
+  copy:
+    src=Adafruit_DHT
+    dest=/usr/local/bin/Adafruit_DHT
+    mode=0755
+
+- name: Install tools
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - python-netifaces
+
+- name: Install env monitor script
+  copy:
+    src=env_sensor.py
+    dest=/usr/local/bin/env_sensor.py
+    mode=0755
+
+- name: Add sensor script to cron
+  cron:
+    name="env_sensor script"
+    special_time=reboot
+    job="sleep 60;/usr/local/bin/env_sensor.py > /dev/tty1"
+  notify: Restart system
+
+- name: Set permissions for graphite DB
+  file:
+    path=/opt/graphite/storage/graphite.db
+    owner=www-data
+    group=www-data

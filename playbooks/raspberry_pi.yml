@@ -1,0 +1,6 @@
+---
+
+- hosts: raspberry_pi
+  sudo: yes
+  roles:
+    - raspberry_pi

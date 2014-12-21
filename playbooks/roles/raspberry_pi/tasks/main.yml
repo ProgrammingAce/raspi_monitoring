@@ -1,0 +1,72 @@
+---
+
+- name: Force apt-get update
+  shell: "apt-get update"
+
+- name: Install ansible prereqs
+  shell: "apt-get install --assume-yes aptitude python-apt"
+
+- name: Create admin group
+  group:
+    name=admin
+    state=present
+
+- name: Give admin group sudo rights
+  lineinfile: 'dest=/etc/sudoers state=present line=''%admin ALL=(ALL) NOPASSWD: ALL'''
+
+- name: Create Ansible user
+  action: user
+    name=ansible
+    group=admin
+
+- name: Create ansible .ssh folder
+  file:
+    path=/home/ansible/.ssh
+    state=directory
+    owner=ansible
+    group=root
+    mode=0700
+
+- name: Install ansible ssh key
+  copy:
+    src=authorized_keys
+    dest=/home/ansible/.ssh/authorized_keys
+    owner=ansible
+    group=root
+    mode=0600
+
+- name: Update the apt cache
+  apt: 
+    update_cache=yes
+    cache_valid_time=3600
+
+- name: Uninstall the wolfram-alpha engine
+  apt: pkg={{ item }} state=absent
+  with_items:
+    - wolfram-engine
+
+- name: Install tools
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - unattended-upgrades
+    - atop
+    - htop
+    - iftop
+    - iotop
+    - rpi-update
+
+- name: Install raspi-expand-rootfs script
+  copy:
+    src=raspi-expand-rootfs.sh
+    dest=/usr/local/bin/raspi-expand-rootfs.sh
+    owner=root
+    group=root
+    mode=0744
+  notify: Run expand-rootfs.sh
+
+- name: Autoremove any unused packages.
+  shell: "apt-get autoremove --assume-yes --purge"
+
+- name: Autoclean the system.
+  shell: "apt-get autoclean --assume-yes"
+
