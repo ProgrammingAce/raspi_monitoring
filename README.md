@@ -12,13 +12,13 @@ following versions of raspbian have been tested and confirmed working:
 * 2014-06-20-wheezy-raspbian
 * 2014-01-07-wheezy-raspbian
 
-You can find instructions on installing Raspbian to an SD card here: 
+You can find instructions on installing Raspbian to an SD card here:   
 http://www.raspberrypi.org/documentation/installation/installing-images/README.md
 
 === Building the Hardware ===
 -----------
 For environmental monitoring, this system requires you to build a simple circuit board and attach 
-it to your raspberry pi. Full instructions for the circuit are here:
+it to your raspberry pi. Full instructions for the circuit are here:  
 http://programmingace.com/2014/12/11/raspberry-pi-monitoring-platform-the-hardware/
 
 
@@ -32,21 +32,21 @@ private SSH key in the "ssh_keys" directory of the repo.
 === Installing ===
 -----------
 We will be setting up the raspberry pi using Ansible. If you don't already have Ansible installed, 
-it should be in the major repos already (mac homebrew, Fedora/EPEL, Ubuntu). Otherwise:
+it should be in the major repos already (mac homebrew, Fedora/EPEL, Ubuntu). Otherwise:  
 http://docs.ansible.com/intro_installation.html
 
 Finding your pi's IP address:
 You will need the IP address of your raspberry pi in order for Ansible to install the configuration.
-The raspberry pi foundation gives several methods for finding your IP address here:
+The raspberry pi foundation gives several methods for finding your IP address here:  
 http://www.raspberrypi.org/documentation/troubleshooting/hardware/networking/ip-address.md
 
 From your PC:
 If you have strict hostkey checking turned on for SSH (which you probably do), 
 you'll need to SSH into the raspberry pi once before running these scripts. 
 This will add the pi's hostkey to your SSH configuration. The default login
-is: 
-username: pi 
-password: raspberry
+is:  
+username: pi  
+password: raspberry  
 
 You will need to edit the 'inventory' file in the 'playbooks' folder of the repo.
 Under [raspberry_pi] replace the IP address with the address to your Pi.
@@ -70,8 +70,8 @@ When prompted for a password, use 'raspberry'
 -----------
 This monitoring system records and presents data using the open source tool Graphite. The graphite 
 dashboard is already up and running, you'll just need to select how you want to display the data. 
-You can find the dashboard at:
-http://<IP of raspberry pi>>/dashboard/
+You can find the dashboard at:  
+http://{IP of raspberry pi}/dashboard/
 
 The temperature and humidity readings are under the category 'environment'.
 
