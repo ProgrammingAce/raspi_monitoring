@@ -78,7 +78,6 @@
     group=www-data
     recurse=yes
     path=/opt/graphite/storage/
-  notify: Restart apache
 
 - name: Start carbon service
   service:

@@ -29,3 +29,13 @@
     path=/opt/graphite/storage/graphite.db
     owner=www-data
     group=www-data
+
+- meta: flush_handlers
+
+- name: Pause for 60 seconds to allow graphite to start up
+  pause: minutes=1
+
+- name: Restart apache
+  service:
+    name=apache2
+    state=restarted

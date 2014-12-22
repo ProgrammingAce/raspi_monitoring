@@ -61,8 +61,8 @@ while True:
     time.sleep(10)
     continue
 
-  lines.append("room.temperature %s %d" % (environment[0],now))
-  lines.append("room.humidity %s %d" % (environment[1],now))
+  lines.append("environment.temperature %s %d" % (environment[0],now))
+  lines.append("environment.humidity %s %d" % (environment[1],now))
   message = '\n'.join(lines) + '\n' # Each line must end with a newline
 
   # Set the screen to white on black
