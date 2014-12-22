@@ -35,12 +35,12 @@ We will be setting up the raspberry pi using Ansible. If you don't already have 
 it should be in the major repos already (mac homebrew, Fedora/EPEL, Ubuntu). Otherwise:
 http://docs.ansible.com/intro_installation.html
 
-** Finding your pi's IP address: **
+Finding your pi's IP address:
 You will need the IP address of your raspberry pi in order for Ansible to install the configuration.
 The raspberry pi foundation gives several methods for finding your IP address here:
 http://www.raspberrypi.org/documentation/troubleshooting/hardware/networking/ip-address.md
 
-** From your PC: **
+From your PC:
 If you have strict hostkey checking turned on for SSH (which you probably do), 
 you'll need to SSH into the raspberry pi once before running these scripts. 
 This will add the pi's hostkey to your SSH configuration. The default login
