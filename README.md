@@ -17,9 +17,8 @@ http://www.raspberrypi.org/documentation/installation/installing-images/README.m
 
 === Building the Hardware ===
 -----------
-For environmental monitoring, this system requires you to build a simple circuit board and attach 
-it to your raspberry pi. Full instructions for the circuit are here:  
-http://programmingace.com/2014/12/11/raspberry-pi-monitoring-platform-the-hardware/
+Instructions for building the required hardware are here:  
+https://github.com/ProgrammingAce/raspi_monitoring/wiki/Hardware
 
 
 === Security Considerations ===
@@ -31,40 +30,8 @@ private SSH key in the "ssh_keys" directory of the repo.
 
 === Installing ===
 -----------
-We will be setting up the raspberry pi using Ansible. If you don't already have Ansible installed, 
-it should be in the major repos already (mac homebrew, Fedora/EPEL, Ubuntu). Otherwise:  
-http://docs.ansible.com/intro_installation.html
-
-Finding your pi's IP address:  
-You will need the IP address of your raspberry pi in order for Ansible to install the configuration.
-The raspberry pi foundation gives several methods for finding your IP address here:  
-http://www.raspberrypi.org/documentation/troubleshooting/hardware/networking/ip-address.md
-
-From your PC:  
-If you have strict hostkey checking turned on for SSH (which you probably do), 
-you'll need to SSH into the raspberry pi once before running these scripts. 
-This will add the pi's hostkey to your SSH configuration. The default login
-is:  
-username: pi  
-password: raspberry  
-
-You will need to edit the 'inventory' file in the 'playbooks' folder of the repo.
-Under [raspberry_pi] replace the IP address with the address to your Pi.
-
-There are several different configurations you can choose from that perform 
-different tasks.
-
-- raspberry_pi.yml - Runs updates, sets up ssh keys, removes wolfram alpha packages, resizes SD card
-- env_monitor_no_screen.yml - Same as raspberry_pi.yml, plus sets up a temperature and humidity 
-                              monitoring system
-- env_monitor_with_screen.yml - Same as above, but displays output on an adafruit LCD touchscreen
-
-Configuring the Raspberry Pi:  
-To configure the pi, run the following command. Expect the build to take about half an hour:
-
-ansible-playbook -i inventory <<select .yml file from the options above>> -u pi --ask-pass
-
-When prompted for a password, use 'raspberry'
+Instructions for setting up your monitoring system are here:  
+https://github.com/ProgrammingAce/raspi_monitoring/wiki/Installation
 
 === Viewing the Data ===
 -----------
