@@ -5,6 +5,7 @@ This is a set of ansible scripts that can be used to build a temperature and
 humidity logging station out of a raspberry pi.
 
 === Getting Started ===
+-----------
 You will need a raspberry pi model B, and an SD card loaded with a newer version of Raspbian. The 
 following versions of raspbian have been tested and confirmed working:
 * 2014-09-09-wheezy-raspbian
@@ -15,28 +16,31 @@ You can find instructions on installing Raspbian to an SD card here:
 http://www.raspberrypi.org/documentation/installation/installing-images/README.md
 
 === Building the Hardware ===
+-----------
 For environmental monitoring, this system requires you to build a simple circuit board and attach 
 it to your raspberry pi. Full instructions for the circuit are here:
 http://programmingace.com/2014/12/11/raspberry-pi-monitoring-platform-the-hardware/
 
 
 === Security Considerations ===
+-----------
 These scripts do not build a 'secure' image. The default root username and password are left as-is.
 DO NOT leave this system connected to an untrusted network (such as the internet).
 This script loads an SSH key for the ansible user. You can find the respective 
 private SSH key in the "ssh_keys" directory of the repo.
 
 === Installing ===
+-----------
 We will be setting up the raspberry pi using Ansible. If you don't already have Ansible installed, 
 it should be in the major repos already (mac homebrew, Fedora/EPEL, Ubuntu). Otherwise:
 http://docs.ansible.com/intro_installation.html
 
-Finding your pi's IP address:
+### Finding your pi's IP address:
 You will need the IP address of your raspberry pi in order for Ansible to install the configuration.
 The raspberry pi foundation gives several methods for finding your IP address here:
 http://www.raspberrypi.org/documentation/troubleshooting/hardware/networking/ip-address.md
 
-From your PC:
+### From your PC:
 If you have strict hostkey checking turned on for SSH (which you probably do), 
 you'll need to SSH into the raspberry pi once before running these scripts. 
 This will add the pi's hostkey to your SSH configuration. The default login
@@ -63,6 +67,7 @@ ansible-playbook -i inventory <<select .yml file from the options above>> -u pi 
 When prompted for a password, use 'raspberry'
 
 === Viewing the Data ===
+-----------
 This monitoring system records and presents data using the open source tool Graphite. The graphite 
 dashboard is already up and running, you'll just need to select how you want to display the data. 
 You can find the dashboard at:
